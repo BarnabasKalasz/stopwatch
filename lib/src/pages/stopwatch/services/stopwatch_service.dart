@@ -6,13 +6,15 @@ import 'dart:async';
 class StopwatchService {
   late StopwatchModel _stopwatchModel;
   late Timer _timer;
-  VoidCallback? _listener;
+  late final ValueNotifier<int> _stopwatchNotifier;
 
   StopwatchService() {
     _stopwatchModel = StopwatchModel(milliseconds: 0, isRunning: false);
+    _stopwatchNotifier = ValueNotifier(_stopwatchModel.milliseconds);
   }
 
   StopwatchModel get stopwatchModel => _stopwatchModel;
+  ValueNotifier<int> get stopwatchNotifier => _stopwatchNotifier;
 
   void start() {
     _timer = Timer.periodic(const Duration(milliseconds: 10), _updateTime);
@@ -37,11 +39,7 @@ class StopwatchService {
     _notifyListeners();
   }
 
-  void addListener(VoidCallback listener) {
-    _listener = listener;
-  }
-
   void _notifyListeners() {
-    _listener?.call();
+    _stopwatchNotifier.value = _stopwatchModel.milliseconds;
   }
 }

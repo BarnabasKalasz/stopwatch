@@ -1,7 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/models/stopwatch_model.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/services/stopwatch_service.dart';
-
-import 'package:flutter/material.dart';
 
 class StopwatchPage extends StatefulWidget {
   final StopwatchService stopwatchService;
@@ -20,49 +19,38 @@ class _StopwatchPageState extends State<StopwatchPage> {
   void initState() {
     super.initState();
     _stopwatchModel = widget.stopwatchService.stopwatchModel;
-    widget.stopwatchService.addListener(_updateUI);
-  }
-
-  @override
-  void dispose() {
-    widget.stopwatchService.stop();
-    super.dispose();
-  }
-
-  void _updateUI() {
-    setState(() {
-      _stopwatchModel = widget.stopwatchService.stopwatchModel;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Stopwatch App'),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              _formatTime(_stopwatchModel.milliseconds),
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ValueListenableBuilder<int>(
+              valueListenable: widget.stopwatchService.stopwatchNotifier,
+              builder: (context, value, _) {
+                return Text(
+                  _formatTime(value),
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold),
+                );
+              },
             ),
             const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () => _startStopwatch(),
-                  child: Text(_stopwatchModel.isRunning ? 'Stop' : 'Start'),
-                ),
-                const SizedBox(width: 20),
-                const SizedBox(width: 20),
-                ElevatedButton(
-                  onPressed: _stopwatchModel.isRunning ? null : _resetStopwatch,
-                  child: const Text('Reset'),
-                ),
-              ],
+            ElevatedButton(
+              onPressed: _startStopwatch,
+              child: Text(_stopwatchModel.isRunning ? 'Stop' : 'Start'),
             ),
             const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _resetStopwatch,
+              child: const Text('Reset'),
+            ),
           ],
         ),
       ),
