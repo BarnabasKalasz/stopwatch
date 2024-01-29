@@ -1,29 +1,54 @@
-// ignore_for_file: depend_on_referenced_packages
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/models/stopwatch_model.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/screens/stopwatch_screen.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/services/stopwatch_service.dart';
 
-class MockStopwatchService extends Mock
-    implements StopwatchService {} //TBD Fix the mocking
+class TestStopwatchService implements StopwatchService {
+  // ignore: prefer_final_fields
+  late StopwatchModel _stopwatchModel;
+  late final ValueNotifier<int> _stopwatchNotifier;
+
+  TestStopwatchService({
+    required StopwatchModel stopwatchModel,
+  })  : _stopwatchModel = stopwatchModel,
+        _stopwatchNotifier = ValueNotifier(stopwatchModel.milliseconds);
+
+  @override
+  StopwatchModel get stopwatchModel => _stopwatchModel;
+
+  @override
+  void start() {
+    _stopwatchModel.isRunning = true;
+  }
+
+  @override
+  void stop() {
+    _stopwatchModel.isRunning = false;
+  }
+
+  @override
+  void reset() {
+    _stopwatchModel.milliseconds = 0;
+  }
+
+  @override
+  ValueNotifier<int> get stopwatchNotifier => _stopwatchNotifier;
+}
 
 void main() {
   group('StopwatchPage', () {
-    late MockStopwatchService mockStopwatchService;
+    late TestStopwatchService testStopwatchService;
 
     setUp(() {
-      mockStopwatchService = MockStopwatchService();
-
-      when(mockStopwatchService.stopwatchModel)
-          .thenReturn(StopwatchModel(milliseconds: 0, isRunning: false));
+      testStopwatchService = TestStopwatchService(
+        stopwatchModel: StopwatchModel(milliseconds: 0, isRunning: false),
+      );
     });
 
     testWidgets('Test UI Rendering', (WidgetTester tester) async {
       await tester
-          .pumpWidget(StopwatchPage(stopwatchService: mockStopwatchService));
+          .pumpWidget(StopwatchPage(stopwatchService: testStopwatchService));
 
       expect(find.byKey(const Key('start-stop-button')), findsOneWidget);
       expect(find.byKey(const Key('reset-button')), findsOneWidget);
@@ -32,7 +57,7 @@ void main() {
     testWidgets('Test Start/Stop Button Functionality',
         (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
-          home: StopwatchPage(stopwatchService: mockStopwatchService)));
+          home: StopwatchPage(stopwatchService: testStopwatchService)));
 
       await tester.tap(find.byKey(const Key('start-stop-button')));
       await tester.pump();
@@ -47,7 +72,7 @@ void main() {
 
     testWidgets('Test Reset Button Functionality', (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
-          home: StopwatchPage(stopwatchService: mockStopwatchService)));
+          home: StopwatchPage(stopwatchService: testStopwatchService)));
 
       await tester.tap(find.byKey(const Key('reset-button')));
       await tester.pump();
