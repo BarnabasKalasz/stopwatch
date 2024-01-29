@@ -6,7 +6,7 @@ import 'dart:async';
 class StopwatchService {
   late StopwatchModel _stopwatchModel;
   late Timer _timer;
-  late final ValueNotifier<int> _stopwatchNotifier;
+  late ValueNotifier<int> _stopwatchNotifier;
 
   StopwatchService() {
     _stopwatchModel = StopwatchModel(milliseconds: 0, isRunning: false);

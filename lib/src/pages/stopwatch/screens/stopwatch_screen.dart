@@ -9,6 +9,7 @@ class StopwatchPage extends StatefulWidget {
       : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _StopwatchPageState createState() => _StopwatchPageState();
 }
 
@@ -38,16 +39,19 @@ class _StopwatchPageState extends State<StopwatchPage> {
                   _formatTime(value),
                   style: const TextStyle(
                       fontSize: 24, fontWeight: FontWeight.bold),
+                  key: const Key("elapsed-time-display"),
                 );
               },
             ),
             const SizedBox(height: 20),
             ElevatedButton(
+              key: const Key("start-stop-button"),
               onPressed: _startStopwatch,
               child: Text(_stopwatchModel.isRunning ? 'Stop' : 'Start'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
+              key: const Key("reset-buttton"),
               onPressed: _resetStopwatch,
               child: const Text('Reset'),
             ),
