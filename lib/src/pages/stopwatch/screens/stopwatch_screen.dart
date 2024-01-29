@@ -20,6 +20,19 @@ class _StopwatchPageState extends State<StopwatchPage> {
   void initState() {
     super.initState();
     _stopwatchModel = widget.stopwatchService.stopwatchModel;
+    widget.stopwatchService.addListener(_updateUI);
+  }
+
+  @override
+  void dispose() {
+    widget.stopwatchService.stop();
+    super.dispose();
+  }
+
+  void _updateUI() {
+    setState(() {
+      _stopwatchModel = widget.stopwatchService.stopwatchModel;
+    });
   }
 
   @override
