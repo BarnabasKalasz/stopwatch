@@ -4,15 +4,20 @@ import 'package:test_sopwatch/src/pages/stopwatch/models/stopwatch_model.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/screens/stopwatch_screen.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/services/stopwatch_service.dart';
 
+/// Eaiser to mock this way than to import a whole mock package like nockito
 class TestStopwatchService implements StopwatchService {
   // ignore: prefer_final_fields
   late StopwatchModel _stopwatchModel;
-  late final ValueNotifier<int> _stopwatchNotifier;
+  late final ValueNotifier<int> _stopwatchTimeNotifier;
+  late final ValueNotifier<List<int>> _stopwatchLapNotifier;
+  late final ValueNotifier<bool> _stopwatchisRunningNotifier;
 
   TestStopwatchService({
     required StopwatchModel stopwatchModel,
   })  : _stopwatchModel = stopwatchModel,
-        _stopwatchNotifier = ValueNotifier(stopwatchModel.milliseconds);
+        _stopwatchTimeNotifier = ValueNotifier(stopwatchModel.milliseconds),
+        _stopwatchisRunningNotifier = ValueNotifier(stopwatchModel.isRunning),
+        _stopwatchLapNotifier = ValueNotifier(stopwatchModel.laps);
 
   @override
   StopwatchModel get stopwatchModel => _stopwatchModel;
@@ -30,10 +35,23 @@ class TestStopwatchService implements StopwatchService {
   @override
   void reset() {
     _stopwatchModel.milliseconds = 0;
+    _stopwatchModel.isRunning = false;
   }
 
   @override
-  ValueNotifier<int> get stopwatchNotifier => _stopwatchNotifier;
+  void lap() {
+    _stopwatchModel.laps = [];
+  }
+
+  @override
+  ValueNotifier<int> get stopwatchTimeNotifier => _stopwatchTimeNotifier;
+
+  @override
+  ValueNotifier<List<int>> get stopwatchLapNotifier => _stopwatchLapNotifier;
+
+  @override
+  ValueNotifier<bool> get stopwatchisRunningNotifier =>
+      _stopwatchisRunningNotifier;
 }
 
 void main() {
@@ -42,22 +60,26 @@ void main() {
 
     setUp(() {
       testStopwatchService = TestStopwatchService(
-        stopwatchModel: StopwatchModel(milliseconds: 0, isRunning: false),
+        stopwatchModel:
+            StopwatchModel(milliseconds: 0, isRunning: false, laps: []),
       );
     });
 
     testWidgets('Test UI Rendering', (WidgetTester tester) async {
-      await tester
-          .pumpWidget(StopwatchPage(stopwatchService: testStopwatchService));
+      await tester.pumpWidget(MaterialApp(
+          home: StopwatchPage(stopwatchService: testStopwatchService)));
 
       expect(find.byKey(const Key('start-stop-button')), findsOneWidget);
       expect(find.byKey(const Key('reset-button')), findsOneWidget);
+      expect(find.byKey(const Key('lap-button')), findsOneWidget);
     });
 
     testWidgets('Test Start/Stop Button Functionality',
         (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(
           home: StopwatchPage(stopwatchService: testStopwatchService)));
+
+      expect(find.text('Start'), findsOneWidget);
 
       await tester.tap(find.byKey(const Key('start-stop-button')));
       await tester.pump();
