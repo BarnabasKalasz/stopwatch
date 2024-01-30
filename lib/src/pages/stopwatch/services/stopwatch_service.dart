@@ -43,6 +43,7 @@ class StopwatchService {
     _stopwatchModel.laps = [];
     _notifyisRunningListeners();
     _notifyTimeListeners();
+    _notifyLapListeners();
   }
 
   void _updateTime(Timer timer) {
@@ -60,11 +61,10 @@ class StopwatchService {
 
   void clearLap(int index) {
     _stopwatchModel.laps.removeAt(index);
-    _notifyLapListeners();
   }
 
   /// This was necessary in order to eliminate rebuilding the UI everytime one of the stopwatch model values updated.
-  /// The reson they have separate notifiers, is because "ValueNotifier" uses "==" operator to check values, and that would always return true in this case.
+  /// The reason they have separate notifiers, is because "ValueNotifier" uses "==" operator to check values, and that would always return true in this case.
 
   void _notifyisRunningListeners() {
     _stopwatchisRunningNotifier.value = _stopwatchModel.isRunning;
