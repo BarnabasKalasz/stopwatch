@@ -4,8 +4,15 @@ import 'package:flutter/material.dart';
 
 class AnalogClock extends StatefulWidget {
   final double size;
+  final int clockRange;
+  final int displayNth;
 
-  const AnalogClock({Key? key, required this.size}) : super(key: key);
+  const AnalogClock({
+    Key? key,
+    required this.size,
+    this.clockRange = 12,
+    this.displayNth = 1,
+  }) : super(key: key);
 
   @override
   AnalogClockState createState() => AnalogClockState();
@@ -38,13 +45,18 @@ class AnalogClockState extends State<AnalogClock> {
       width: widget.size,
       height: widget.size,
       child: CustomPaint(
-        painter: _ClockPainter(),
+        painter: _ClockPainter(widget.clockRange, widget.displayNth),
       ),
     );
   }
 }
 
 class _ClockPainter extends CustomPainter {
+  final int clockRange;
+  final int displayNth;
+
+  _ClockPainter(this.clockRange, this.displayNth);
+
   @override
   void paint(Canvas canvas, Size size) {
     final centerX = size.width / 2;
@@ -86,8 +98,8 @@ class _ClockPainter extends CustomPainter {
     );
     const textStyle =
         TextStyle(color: Colors.black, fontWeight: FontWeight.bold);
-    const angleStep = 2 * pi / 12;
-    for (var i = 1; i <= 12; i++) {
+    final angleStep = 2 * pi / clockRange;
+    for (var i = clockRange; i > 0; i -= displayNth) {
       final angle = -pi / 2 + angleStep * i;
       final x = centerX + (radius - 20) * cos(angle);
       final y = centerY + (radius - 20) * sin(angle);
@@ -104,7 +116,7 @@ class _ClockPainter extends CustomPainter {
         centerX,
         centerY,
         radius,
-        dateTime.hour % 12 / 12 * 2 * pi,
+        dateTime.hour % clockRange / clockRange * 2 * pi,
         0.5 * radius,
         4,
         Colors.black); // Hour hand
