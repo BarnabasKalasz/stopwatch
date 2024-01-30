@@ -42,6 +42,11 @@ class TestStopwatchService implements StopwatchService {
   void lap() {
     _stopwatchModel.laps = [];
   }
+ 
+  @override
+  void clearLap(int lapIndex) {
+    _stopwatchModel.laps = [];
+  }
 
   @override
   ValueNotifier<int> get stopwatchTimeNotifier => _stopwatchTimeNotifier;
@@ -52,6 +57,7 @@ class TestStopwatchService implements StopwatchService {
   @override
   ValueNotifier<bool> get stopwatchisRunningNotifier =>
       _stopwatchisRunningNotifier;
+      
 }
 
 void main() {

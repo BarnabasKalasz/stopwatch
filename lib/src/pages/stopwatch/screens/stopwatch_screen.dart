@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'package:test_sopwatch/src/pages/stopwatch/components/lap_builder.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/models/stopwatch_model.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/services/stopwatch_service.dart';
 import 'package:test_sopwatch/src/common/utils/value_listenable_builder_3.dart';
@@ -75,7 +77,10 @@ class _StopwatchPageState extends State<StopwatchPage> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                _buildLapList(),
+                LapList(
+                  laps: laps,
+                  onClear: (index) => widget.stopwatchService.clearLap(index),
+                ),
               ],
             );
           },
@@ -94,23 +99,6 @@ class _StopwatchPageState extends State<StopwatchPage> {
 
   void _lap() {
     widget.stopwatchService.lap();
-  }
-
-  Widget _buildLapList() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Lap Times:',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        for (int i = 0; i < _stopwatchModel.laps.length; i++)
-          Text(
-            'Lap ${i + 1}: ${formatTime(_stopwatchModel.laps[i])}',
-          ),
-      ],
-    );
   }
 
   void _resetStopwatch() {
