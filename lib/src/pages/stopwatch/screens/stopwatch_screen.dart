@@ -36,9 +36,6 @@ class _StopwatchPageState extends State<StopwatchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Stopwatch App'),
-      ),
       body: Center(
         child: ValueListenableBuilder3<bool, List<int>, int>(
           first: widget.stopwatchService.stopwatchisRunningNotifier,
@@ -48,7 +45,8 @@ class _StopwatchPageState extends State<StopwatchPage> {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const AnalogClock(
+                AnalogClock(
+                  elapsedTimeMs: milliseconds,
                   size: 150,
                   clockRange: 12,
                   displayNth: 6,
