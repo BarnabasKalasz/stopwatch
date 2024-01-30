@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_sopwatch/src/pages/stopwatch/components/analog_clock_widget.dart';
 
 import 'package:test_sopwatch/src/pages/stopwatch/components/lap_builder.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/models/stopwatch_model.dart';
@@ -47,6 +48,7 @@ class _StopwatchPageState extends State<StopwatchPage> {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const AnalogClock(size: 150),
                 Text(
                   formatTime(milliseconds),
                   style: const TextStyle(
