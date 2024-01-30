@@ -7,11 +7,13 @@ class AnalogClock extends StatefulWidget {
   final int clockRange;
   final int displayNth;
   final int elapsedTimeMs;
+  final bool useDate;
 
   const AnalogClock({
     Key? key,
     required this.size,
     required this.elapsedTimeMs,
+    this.useDate = false,
     this.clockRange = 12,
     this.displayNth = 1,
   }) : super(key: key);
@@ -43,13 +45,19 @@ class AnalogClockState extends State<AnalogClock> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: widget.size,
-      height: widget.size,
-      child: CustomPaint(
-        painter: _ClockPainter(
-            widget.clockRange, widget.displayNth, widget.elapsedTimeMs),
-      ),
+    return Column(
+      children: [
+        Text(
+            '${DateTime.now().hour} : ${DateTime.now().minute} : ${DateTime.now().second}'),
+        SizedBox(
+          width: widget.size,
+          height: widget.size,
+          child: CustomPaint(
+            painter: _ClockPainter(widget.clockRange, widget.displayNth,
+                widget.elapsedTimeMs, widget.useDate),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -58,8 +66,10 @@ class _ClockPainter extends CustomPainter {
   final int clockRange;
   final int displayNth;
   final int elapsedTimeMs;
+  final bool useDate;
 
-  _ClockPainter(this.clockRange, this.displayNth, this.elapsedTimeMs);
+  _ClockPainter(
+      this.clockRange, this.displayNth, this.elapsedTimeMs, this.useDate);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -113,49 +123,19 @@ class _ClockPainter extends CustomPainter {
           Offset(x - textPainter.width / 2, y - textPainter.height / 2));
     }
 
-    // Draw the arms
-/*     final dateTime = DateTime.now();
-    _drawHand(
-        canvas,
-        centerX,
-        centerY,
-        radius,
-        dateTime.hour % clockRange / clockRange * 2 * pi,
-        0.5 * radius,
-        4,
-        Colors.black); // Hour hand
-    _drawHand(canvas, centerX, centerY, radius, dateTime.minute / 60 * 2 * pi,
-        0.7 * radius, 2, Colors.black); // Minute hand
-    _drawHand(canvas, centerX, centerY, radius, dateTime.second / 60 * 2 * pi,
-        0.8 * radius, 1, Colors.red); // Second hand
-  }
-
-  void _drawHand(Canvas canvas, double centerX, double centerY, double radius,
-      double angle, double length, double width, Color color) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = width
-      ..strokeCap = StrokeCap.round;
-
-    final x = length * cos(angle);
-    final y = length * sin(angle);
-
-    canvas.drawLine(
-      Offset(centerX, centerY),
-      Offset(centerX + x, centerY + y),
-      paint,
-    );  */
-
     /// Draw the arms
-    // final dateTime = DateTime.now();
+    final dateTime = DateTime.now();
     _drawHand(
         canvas,
         centerX,
         centerY,
         radius,
-        (elapsedTimeMs / (1000 * 60 * 60 * 86400)) *
-            2 *
-            pi, //Angle for the hour arm
+        (useDate
+            ? ((dateTime.hour % 12 / 12 * 2 * pi) +
+                (dateTime.minute / 60 * (2 * pi / 12)))
+            : (elapsedTimeMs / (1000 * 60 * 60 * 86400) * 2 * pi)),
+
+        //Angle for the hour arm
         0.5 * radius,
         4,
         Colors.black); // Hour hand
@@ -164,7 +144,9 @@ class _ClockPainter extends CustomPainter {
         centerX,
         centerY,
         radius,
-        (elapsedTimeMs / (1000 * 60 * 3600)) * 2 * pi,
+        (useDate
+            ? (dateTime.minute / 60 * 2 * pi)
+            : ((elapsedTimeMs / (1000 * 60 * 3600)) * 2 * pi)),
         0.7 * radius,
         2,
         Colors.black); // Minute hand
@@ -173,7 +155,9 @@ class _ClockPainter extends CustomPainter {
         centerX,
         centerY,
         radius,
-        (elapsedTimeMs / (1000 * 60)) * 2 * pi,
+        (useDate
+            ? (dateTime.second / 60 * 2 * pi)
+            : (elapsedTimeMs / (1000 * 60) * 2 * pi)),
         0.8 * radius,
         1,
         Colors.red); // Second hand
@@ -186,40 +170,14 @@ class _ClockPainter extends CustomPainter {
       ..strokeWidth = width
       ..strokeCap = StrokeCap.round;
 
-    final x = length * cos(angle);
-    final y = length * sin(angle);
+    final x = length * cos(angle - pi / 2);
+    final y = length * sin(angle - pi / 2);
 
     canvas.drawLine(
       Offset(centerX, centerY),
       Offset(centerX + x, centerY + y),
       paint,
     );
-
-/* 
-void _drawHands(Canvas canvas, double centerX, double centerY, double radius, int elapsedTimeMs) {
-  final double hourAngle = (elapsedTimeMs / (1000 * 60 * 60 * arms[0].secondsForFullRevolution)) * 2 * pi;
-  final double minuteAngle = (elapsedTimeMs / (1000 * 60 * arms[1].secondsForFullRevolution)) * 2 * pi;
-  final double secondAngle = (elapsedTimeMs / (1000 * arms[2].secondsForFullRevolution)) * 2 * pi;
-
-  _drawHand(canvas, centerX, centerY, radius, hourAngle, arms[0].size.length, arms[0].size.width, Colors.black); // Hour hand
-  _drawHand(canvas, centerX, centerY, radius, minuteAngle, arms[1].size.length, arms[1].size.width, Colors.black); // Minute hand
-  _drawHand(canvas, centerX, centerY, radius, secondAngle, arms[2].size.length, arms[2].size.width, Colors.red); // Second hand
-}
-
-void _drawHand(Canvas canvas, double centerX, double centerY, double radius, double angle, double length, double width, Color color) {
-  final paint = Paint()
-    ..color = color
-    ..strokeWidth = width
-    ..strokeCap = StrokeCap.round;
-
-  final x = length * cos(angle);
-  final y = length * sin(angle);
-
-  canvas.drawLine(
-    Offset(centerX, centerY),
-    Offset(centerX + x, centerY + y),
-    paint,
-  ); */
   }
 
   @override

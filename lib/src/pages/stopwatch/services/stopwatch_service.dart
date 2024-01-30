@@ -60,7 +60,9 @@ class StopwatchService {
   }
 
   void clearLap(int index) {
-    _stopwatchModel.laps.removeAt(index);
+    if (_stopwatchModel.laps.isNotEmpty) { /// This condition is there to make sure we arent trying to clear from an empty laps list. In theory it cannot happen, but in practice it has.
+      _stopwatchModel.laps.removeAt(index);
+    }
   }
 
   /// This was necessary in order to eliminate rebuilding the UI everytime one of the stopwatch model values updated.

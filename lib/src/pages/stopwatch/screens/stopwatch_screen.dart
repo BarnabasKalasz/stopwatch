@@ -50,6 +50,7 @@ class _StopwatchPageState extends State<StopwatchPage> {
                   size: 150,
                   clockRange: 12,
                   displayNth: 6,
+                  useDate: true,
                 ),
                 Text(
                   formatTime(milliseconds),
