@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/models/stopwatch_model.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/services/stopwatch_service.dart';
-import 'package:test_sopwatch/src/pages/stopwatch/utils/value_listenable_builder_3.dart';
+import 'package:test_sopwatch/src/common/utils/value_listenable_builder_3.dart';
 
 import '../utils/utilities.dart';
 
