@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:test_sopwatch/src/common/theme/theme.dart';
+// import 'package:test_sopwatch/src/common/theme/theme.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/components/analog_clock_widget/analog_clock_widget.dart';
 
 import 'package:test_sopwatch/src/pages/stopwatch/components/lap_list_builder/lap_list_builder.dart';
@@ -21,6 +23,7 @@ class StopwatchPage extends StatefulWidget {
 
 class _StopwatchPageState extends State<StopwatchPage> {
   late StopwatchModel _stopwatchModel;
+  bool _isDarkMode = false;
 
   @override
   void initState() {
@@ -36,72 +39,95 @@ class _StopwatchPageState extends State<StopwatchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: ValueListenableBuilder3<bool, List<int>, int>(
-          first: widget.stopwatchService.stopwatchisRunningNotifier,
-          second: widget.stopwatchService.stopwatchLapNotifier,
-          third: widget.stopwatchService.stopwatchTimeNotifier,
-          builder: (context, isRunning, laps, milliseconds, child) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SwipeableStopwatchDisplay(children: [
-                  Text(
-                    formatTime(milliseconds),
-                    style: const TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.bold),
-                    key: const Key("elapsed-time-display"),
-                  ),
-                  AnalogClock(
-                    key: ValueKey<int>(milliseconds),
-                    elapsedTimeMs: milliseconds,
-                    size: 180,
-                    clockRange: 12,
-                    displayNth: 3,
-                  ),
-                  AnalogClock(
-                    key: ValueKey<int>(milliseconds),
-                    elapsedTimeMs: milliseconds,
-                    size: 180,
-                    clockRange: 60,
-                    displayNth: 5,
-                  ),
-                ]),
-                const SizedBox(height: 20),
-                Row(
+    final ThemeData theme = _isDarkMode
+        ? darkThemeDataCustom
+        : lightThemeDataCustom; // for an application with multiple pages, the theme should be set at the root (main.dart)
+
+    return MaterialApp(
+        theme: theme,
+        home: Scaffold(
+          appBar: AppBar(
+            actions: [
+              Switch(
+                value: _isDarkMode,
+                onChanged: (value) {
+                  setState(() {
+                    _isDarkMode = value;
+                  });
+                },
+              ),
+            ],
+          ),
+          body: Center(
+            child: ValueListenableBuilder3<bool, List<int>, int>(
+              first: widget.stopwatchService.stopwatchisRunningNotifier,
+              second: widget.stopwatchService.stopwatchLapNotifier,
+              third: widget.stopwatchService.stopwatchTimeNotifier,
+              builder: (context, isRunning, laps, milliseconds, child) {
+                return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      key: const Key("start-stop-button"),
-                      onPressed: _startStopwatch,
-                      child: Text(isRunning ? 'Stop' : 'Start'),
-                    ),
-                    const SizedBox(width: 20),
-                    ElevatedButton(
-                      key: const Key("lap-button"),
-                      onPressed: isRunning ? _lap : null,
-                      child: const Text('Lap'),
+                    SwipeableStopwatchDisplay(children: [
+                      Text(
+                        formatTime(milliseconds),
+                        style: TextStyle(
+                            color: theme.primaryColor,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold),
+                        key: const Key("elapsed-time-display"),
+                      ),
+                      AnalogClock(
+                        key: ValueKey<int>(milliseconds),
+                        elapsedTimeMs: milliseconds,
+                        size: 180,
+                        clockRange: 12,
+                        displayNth: 3,
+                        theme: theme,
+                      ),
+                      AnalogClock(
+                        key: ValueKey<int>(milliseconds),
+                        elapsedTimeMs: milliseconds,
+                        size: 180,
+                        clockRange: 60,
+                        displayNth: 5,
+                        theme: theme,
+                      ),
+                    ]),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          key: const Key("start-stop-button"),
+                          onPressed: _startStopwatch,
+                          child: Text(isRunning ? 'Stop' : 'Start'),
+                        ),
+                        const SizedBox(width: 20),
+                        ElevatedButton(
+                          key: const Key("lap-button"),
+                          onPressed: isRunning ? _lap : null,
+                          child: const Text('Lap'),
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          key: const Key("reset-button"),
+                          onPressed: _resetStopwatch,
+                          child: const Text('Reset'),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 20),
-                    ElevatedButton(
-                      key: const Key("reset-button"),
-                      onPressed: _resetStopwatch,
-                      child: const Text('Reset'),
+                    LapList(
+                      laps: laps,
+                      onClear: (index) =>
+                          widget.stopwatchService.clearLap(index),
                     ),
                   ],
-                ),
-                const SizedBox(height: 20),
-                LapList(
-                  laps: laps,
-                  onClear: (index) => widget.stopwatchService.clearLap(index),
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
+                );
+              },
+            ),
+          ),
+        ));
   }
 
   void _startStopwatch() {

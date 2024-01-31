@@ -12,11 +12,13 @@ class AnalogClock extends StatefulWidget {
   final int displayNth;
   final int elapsedTimeMs;
   final bool useDate;
+  final ThemeData theme;
 
   const AnalogClock({
     Key? key,
     required this.size,
     required this.elapsedTimeMs,
+    required this.theme,
     this.useDate = false,
     this.clockRange = 12,
     this.displayNth = 1,
@@ -54,7 +56,7 @@ class AnalogClockState extends State<AnalogClock> {
       height: widget.size,
       child: CustomPaint(
         painter: _ClockPainter(widget.clockRange, widget.displayNth,
-            widget.elapsedTimeMs, widget.useDate),
+            widget.elapsedTimeMs, widget.useDate, widget.theme),
       ),
     );
   }
@@ -65,9 +67,10 @@ class _ClockPainter extends CustomPainter {
   final int displayNth;
   final int elapsedTimeMs;
   final bool useDate;
+  final ThemeData theme;
 
-  _ClockPainter(
-      this.clockRange, this.displayNth, this.elapsedTimeMs, this.useDate);
+  _ClockPainter(this.clockRange, this.displayNth, this.elapsedTimeMs,
+      this.useDate, this.theme);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -77,20 +80,20 @@ class _ClockPainter extends CustomPainter {
 
     /// Draw the clock
     final facePaint = Paint()
-      ..color = Colors.white
+      ..color = theme.colorScheme.background
       ..style = PaintingStyle.fill;
     canvas.drawCircle(Offset(centerX, centerY), radius, facePaint);
 
     /// Draw the border
     final borderPaint = Paint()
-      ..color = Colors.black
+      ..color = theme.colorScheme.primary
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
     canvas.drawCircle(Offset(centerX, centerY), radius, borderPaint);
 
     /// Draw the dial
     final linePaint = Paint()
-      ..color = Colors.black
+      ..color = theme.colorScheme.primary
       ..strokeWidth = 2;
 
     for (var i = 0; i < 60; i++) {
@@ -108,8 +111,8 @@ class _ClockPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
       textAlign: TextAlign.center,
     );
-    const textStyle =
-        TextStyle(color: Colors.black, fontWeight: FontWeight.bold);
+    final textStyle = TextStyle(
+        color: theme.colorScheme.primary, fontWeight: FontWeight.bold);
     final angleStep = 2 * pi / clockRange;
     for (var i = clockRange; i > 0; i -= displayNth) {
       final angle = -pi / 2 + angleStep * i;
