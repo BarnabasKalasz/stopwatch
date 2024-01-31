@@ -11,7 +11,7 @@ const lightColorScheme = ColorScheme(
   background: Color(0xFFFEFFFF),
   onBackground: Color(0xFF3b3b3b),
   surface: Color(0xFFFEFFFF),
-  onSurface: Color(0xFF3b3b3b),
+  onSurface: Color(0xFF7CA06E),
 );
 
 const darkColorScheme = ColorScheme(
@@ -25,5 +25,5 @@ const darkColorScheme = ColorScheme(
   background: Color(0xFF36383C),
   onBackground: Color(0xFFE3E2E6),
   surface: Color(0xFF39443B),
-  onSurface: Color(0xFFE3E2E6),
+  onSurface: Color(0xFF7CA06E),
 );

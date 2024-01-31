@@ -68,6 +68,24 @@ class _StopwatchPageState extends State<StopwatchPage> {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Tooltip(
+                          message:
+                              'You can swipe between the stopwatch displays, and scroll among the Lap times',
+                          textStyle:
+                              TextStyle(color: theme.colorScheme.onPrimary),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primary,
+                          ),
+                          child: Icon(Icons.info,
+                              color: theme.colorScheme.onSurface),
+                        ),
+                        const SizedBox(width: 20),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
                     SwipeableStopwatchDisplay(children: [
                       Text(
                         formatTime(milliseconds),
@@ -96,7 +114,10 @@ class _StopwatchPageState extends State<StopwatchPage> {
                         clockArmsList: stopWatchArm,
                       ),
                     ]),
-                    const SizedBox(height: 20),
+                    const SizedBox(
+                      width: 20,
+                      height: 20,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -111,7 +132,7 @@ class _StopwatchPageState extends State<StopwatchPage> {
                           onPressed: isRunning ? _lap : null,
                           child: const Text('Lap'),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(width: 20),
                         ElevatedButton(
                           key: const Key("reset-button"),
                           onPressed: _resetStopwatch,

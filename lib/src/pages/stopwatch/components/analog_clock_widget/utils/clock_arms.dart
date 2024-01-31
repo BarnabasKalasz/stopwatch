@@ -12,7 +12,7 @@ List<ArmData> analogClockArms = [
       secondsForFullRevolution: 3600,
       size: ArmSize(armLength: 0.7, armWidth: 2)),
   ArmData(
-      secondsForFullRevolution: 3600 * 24,
+      secondsForFullRevolution: 3600 * 12,
       size: ArmSize(armLength: 0.5, armWidth: 2.5)),
 ];
 
