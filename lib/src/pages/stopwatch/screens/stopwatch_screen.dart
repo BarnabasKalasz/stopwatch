@@ -46,40 +46,28 @@ class _StopwatchPageState extends State<StopwatchPage> {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-/*                 AnalogClock(
-                  elapsedTimeMs: milliseconds,
-                  size: 150,
-                  clockRange: 12,
-                  displayNth: 6,
-                ), */
-                /* Text(
-                  formatTime(milliseconds),
-                  style: const TextStyle(
-                      fontSize: 24, fontWeight: FontWeight.bold),
-                  key: const Key("elapsed-time-display"),
-                ), */
-                SwipeableStopwatchDisplay(
-                    milliseconds: milliseconds,
-                    children: [
-                      AnalogClock(
-                        elapsedTimeMs: milliseconds,
-                        size: 100,
-                        clockRange: 12,
-                        displayNth: 3,
-                      ),
-                      Text(
-                        formatTime(milliseconds),
-                        style: const TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
-                        key: const Key("elapsed-time-display"),
-                      ),
-                      AnalogClock(
-                        elapsedTimeMs: milliseconds,
-                        size: 100,
-                        clockRange: 60,
-                        displayNth: 5,
-                      ),
-                    ]),
+                SwipeableStopwatchDisplay(children: [
+                  Text(
+                    formatTime(milliseconds),
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold),
+                    key: const Key("elapsed-time-display"),
+                  ),
+                  AnalogClock(
+                    key: ValueKey<int>(milliseconds),
+                    elapsedTimeMs: milliseconds,
+                    size: 180,
+                    clockRange: 12,
+                    displayNth: 3,
+                  ),
+                  AnalogClock(
+                    key: ValueKey<int>(milliseconds),
+                    elapsedTimeMs: milliseconds,
+                    size: 180,
+                    clockRange: 60,
+                    displayNth: 5,
+                  ),
+                ]),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
