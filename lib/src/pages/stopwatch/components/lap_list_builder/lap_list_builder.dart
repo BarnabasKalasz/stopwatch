@@ -14,7 +14,7 @@ class LapList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 150,
+        height: 200,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -29,6 +29,7 @@ class LapList extends StatelessWidget {
               Expanded(
                 child: ListView.builder(
                   itemCount: laps.length,
+                  reverse: true,
                   itemBuilder: (context, index) {
                     final lapTime = laps[index];
                     return ListTile(

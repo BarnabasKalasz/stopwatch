@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/components/analog_clock_widget/models/arms_model.dart';
@@ -29,24 +28,9 @@ class AnalogClock extends StatefulWidget {
 }
 
 class AnalogClockState extends State<AnalogClock> {
-  late Timer _timer;
-
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 1), _updateTime);
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
-
-  void _updateTime(Timer timer) {
-    if (mounted) {
-      setState(() {});
-    }
   }
 
   @override
@@ -142,6 +126,12 @@ class _ClockPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
+    // Check if the theme has changed
+    if (oldDelegate is _ClockPainter) {
+      return theme != oldDelegate.theme ||
+          elapsedTimeMs != oldDelegate.elapsedTimeMs ||
+          useDate != oldDelegate.useDate;
+    }
+    return true; // Always repaint if the delegate is not _ClockPainter
   }
 }
