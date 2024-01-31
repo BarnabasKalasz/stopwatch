@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:test_sopwatch/src/common/theme/theme.dart';
 // import 'package:test_sopwatch/src/common/theme/theme.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/components/analog_clock_widget/analog_clock_widget.dart';
+import 'package:test_sopwatch/src/pages/stopwatch/components/analog_clock_widget/utils/clock_arms.dart';
 
 import 'package:test_sopwatch/src/pages/stopwatch/components/lap_list_builder/lap_list_builder.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/components/stopwatch_swipable_display_widget/stopwatch_swipable_display.dart';
@@ -83,6 +84,7 @@ class _StopwatchPageState extends State<StopwatchPage> {
                         clockRange: 12,
                         displayNth: 3,
                         theme: theme,
+                        clockArmsList: analogClockArms,
                       ),
                       AnalogClock(
                         key: ValueKey<int>(milliseconds),
@@ -91,6 +93,7 @@ class _StopwatchPageState extends State<StopwatchPage> {
                         clockRange: 60,
                         displayNth: 5,
                         theme: theme,
+                        clockArmsList: stopWatchArm,
                       ),
                     ]),
                     const SizedBox(height: 20),

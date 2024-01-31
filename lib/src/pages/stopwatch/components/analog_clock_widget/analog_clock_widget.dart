@@ -10,6 +10,7 @@ class AnalogClock extends StatefulWidget {
   final int clockRange;
   final int displayNth;
   final int elapsedTimeMs;
+  final List<ArmData> clockArmsList;
   final bool useDate;
   final ThemeData theme;
 
@@ -18,6 +19,7 @@ class AnalogClock extends StatefulWidget {
     required this.size,
     required this.elapsedTimeMs,
     required this.theme,
+    required this.clockArmsList,
     this.useDate = false,
     this.clockRange = 12,
     this.displayNth = 1,
@@ -39,9 +41,13 @@ class AnalogClockState extends State<AnalogClock> {
       width: widget.size,
       height: widget.size,
       child: CustomPaint(
-        painter: _ClockPainter(widget.clockRange, widget.displayNth,
-            widget.elapsedTimeMs, widget.useDate, widget.theme),
-      ),
+          painter: _ClockPainter(
+              widget.clockRange,
+              widget.displayNth,
+              widget.elapsedTimeMs,
+              widget.useDate,
+              widget.theme,
+              widget.clockArmsList)),
     );
   }
 }
@@ -50,11 +56,12 @@ class _ClockPainter extends CustomPainter {
   final int clockRange;
   final int displayNth;
   final int elapsedTimeMs;
+  final List<ArmData> clockArmsList;
   final bool useDate;
   final ThemeData theme;
 
   _ClockPainter(this.clockRange, this.displayNth, this.elapsedTimeMs,
-      this.useDate, this.theme);
+      this.useDate, this.theme, this.clockArmsList);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -108,20 +115,8 @@ class _ClockPainter extends CustomPainter {
           Offset(x - textPainter.width / 2, y - textPainter.height / 2));
     }
 
-    List<ArmData> arms = [
-      ArmData(
-          secondsForFullRevolution: 60,
-          size: ArmSize(armLength: 0.8, armWidth: 1),
-          color: Colors.red),
-      ArmData(
-          secondsForFullRevolution: 3600,
-          size: ArmSize(armLength: 0.7, armWidth: 2)),
-      ArmData(
-          secondsForFullRevolution: 3600 * 24,
-          size: ArmSize(armLength: 0.5, armWidth: 2.5)),
-    ];
-
-    drawHands(arms, radius, canvas, centerX, centerY, elapsedTimeMs, useDate);
+    drawHands(clockArmsList, radius, canvas, centerX, centerY, elapsedTimeMs,
+        useDate);
   }
 
   @override
@@ -132,6 +127,6 @@ class _ClockPainter extends CustomPainter {
           elapsedTimeMs != oldDelegate.elapsedTimeMs ||
           useDate != oldDelegate.useDate;
     }
-    return true; // Always repaint if the delegate is not _ClockPainter
+    return true;
   }
 }
