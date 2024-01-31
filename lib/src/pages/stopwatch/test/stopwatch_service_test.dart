@@ -49,5 +49,40 @@ void main() {
       expect(stopwatchService.stopwatchModel.milliseconds,
           inInclusiveRange(113, 133));
     });
+
+    test(
+        'Repeated pausing and stopping and resetting, doesnt cause unexpected behaviour',
+        () async {
+      stopwatchService.start();
+
+      await Future.delayed(const Duration(milliseconds: 100));
+      stopwatchService.stop();
+      expect(stopwatchService.stopwatchModel.milliseconds,
+          inInclusiveRange(90, 110));
+
+      /// Pausing and starting to also test if the stopwatch continues from where it stopped
+      stopwatchService.start();
+      await Future.delayed(const Duration(milliseconds: 100));
+      stopwatchService.stop();
+      expect(stopwatchService.stopwatchModel.milliseconds,
+          inInclusiveRange(180, 220));
+
+      stopwatchService.start();
+      await Future.delayed(const Duration(milliseconds: 50));
+      stopwatchService.stop();
+      expect(stopwatchService.stopwatchModel.milliseconds,
+          inInclusiveRange(220, 240));
+
+      stopwatchService.reset();
+      expect(stopwatchService.stopwatchModel.milliseconds, 0);
+      stopwatchService.start();
+
+      await Future.delayed(const Duration(milliseconds: 100));
+      stopwatchService.stop();
+      expect(stopwatchService.stopwatchModel.milliseconds,
+          inInclusiveRange(90, 110));
+      stopwatchService.reset();
+      expect(stopwatchService.stopwatchModel.milliseconds, 0);
+    });
   });
 }
