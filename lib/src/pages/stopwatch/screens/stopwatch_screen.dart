@@ -45,13 +45,12 @@ class _StopwatchPageState extends State<StopwatchPage> {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                AnalogClock(
-                  useDate: true,
+/*                 AnalogClock(
                   elapsedTimeMs: milliseconds,
                   size: 150,
                   clockRange: 12,
                   displayNth: 6,
-                ),
+                ), */
                 Text(
                   formatTime(milliseconds),
                   style: const TextStyle(

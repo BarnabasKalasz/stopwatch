@@ -13,29 +13,35 @@ class LapList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Lap Times:',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        if (laps.isEmpty)
-          const Text('No laps recorded')
-        else
-          Column(
-            children: List.generate(laps.length, (index) {
-              final lapTime = laps[index];
-              return ListTile(
-                title: Text('Lap ${index + 1}: ${formatTime(lapTime)}'),
-                trailing: IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () => onClear(index)),
-              );
-            }),
-          ),
-      ],
-    );
+    return SizedBox(
+        height: 200,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Lap Times:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            if (laps.isEmpty)
+              const Text('No laps recorded')
+            else
+              Expanded(
+                child: ListView.builder(
+                  itemCount: laps.length,
+                  itemBuilder: (context, index) {
+                    final lapTime = laps[index];
+                    return ListTile(
+                      title: Text('Lap ${index + 1}: ${formatTime(lapTime)}'),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () => onClear(index),
+                      ),
+                    );
+                  },
+                ),
+              ),
+          ],
+        ));
   }
 }
