@@ -30,9 +30,8 @@ class LapList extends StatelessWidget {
               return ListTile(
                 title: Text('Lap ${index + 1}: ${formatTime(lapTime)}'),
                 trailing: IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: () => onClear(index),
-                ),
+                    icon: const Icon(Icons.clear),
+                    onPressed: () => onClear(index)),
               );
             }),
           ),

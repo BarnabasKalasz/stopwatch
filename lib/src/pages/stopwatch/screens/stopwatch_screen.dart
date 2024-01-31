@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:test_sopwatch/src/pages/stopwatch/components/analog_clock_widget.dart';
+import 'package:test_sopwatch/src/pages/stopwatch/components/analog_clock_widget/analog_clock_widget.dart';
 
-import 'package:test_sopwatch/src/pages/stopwatch/components/lap_builder.dart';
+import 'package:test_sopwatch/src/pages/stopwatch/components/lap_builder/lap_builder.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/models/stopwatch_model.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/services/stopwatch_service.dart';
 import 'package:test_sopwatch/src/common/utils/value_listenable_builder_3.dart';
@@ -46,11 +46,11 @@ class _StopwatchPageState extends State<StopwatchPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 AnalogClock(
+                  useDate: true,
                   elapsedTimeMs: milliseconds,
                   size: 150,
                   clockRange: 12,
                   displayNth: 6,
-                  useDate: true,
                 ),
                 Text(
                   formatTime(milliseconds),

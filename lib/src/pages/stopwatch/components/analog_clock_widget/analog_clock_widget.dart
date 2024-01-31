@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:test_sopwatch/src/pages/stopwatch/components/analog_clock_widget/models/arms_model.dart';
+import 'package:test_sopwatch/src/pages/stopwatch/components/analog_clock_widget/utils/analog_clock_utils.dart';
+
+//TBD separate logic to make it less bulky
 
 class AnalogClock extends StatefulWidget {
   final double size;
@@ -45,19 +49,13 @@ class AnalogClockState extends State<AnalogClock> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-            '${DateTime.now().hour} : ${DateTime.now().minute} : ${DateTime.now().second}'),
-        SizedBox(
-          width: widget.size,
-          height: widget.size,
-          child: CustomPaint(
-            painter: _ClockPainter(widget.clockRange, widget.displayNth,
-                widget.elapsedTimeMs, widget.useDate),
-          ),
-        ),
-      ],
+    return SizedBox(
+      width: widget.size,
+      height: widget.size,
+      child: CustomPaint(
+        painter: _ClockPainter(widget.clockRange, widget.displayNth,
+            widget.elapsedTimeMs, widget.useDate),
+      ),
     );
   }
 }
@@ -123,61 +121,20 @@ class _ClockPainter extends CustomPainter {
           Offset(x - textPainter.width / 2, y - textPainter.height / 2));
     }
 
-    /// Draw the arms
-    final dateTime = DateTime.now();
-    _drawHand(
-        canvas,
-        centerX,
-        centerY,
-        radius,
-        (useDate
-            ? ((dateTime.hour % 12 / 12 * 2 * pi) +
-                (dateTime.minute / 60 * (2 * pi / 12)))
-            : (elapsedTimeMs / (1000 * 60 * 60 * 86400) * 2 * pi)),
+    List<ArmData> arms = [
+      ArmData(
+          secondsForFullRevolution: 60,
+          size: ArmSize(armLength: 0.8, armWidth: 1),
+          color: Colors.red),
+      ArmData(
+          secondsForFullRevolution: 3600,
+          size: ArmSize(armLength: 0.7, armWidth: 2)),
+      ArmData(
+          secondsForFullRevolution: 3600 * 24,
+          size: ArmSize(armLength: 0.5, armWidth: 2.5)),
+    ];
 
-        //Angle for the hour arm
-        0.5 * radius,
-        4,
-        Colors.black); // Hour hand
-    _drawHand(
-        canvas,
-        centerX,
-        centerY,
-        radius,
-        (useDate
-            ? (dateTime.minute / 60 * 2 * pi)
-            : ((elapsedTimeMs / (1000 * 60 * 3600)) * 2 * pi)),
-        0.7 * radius,
-        2,
-        Colors.black); // Minute hand
-    _drawHand(
-        canvas,
-        centerX,
-        centerY,
-        radius,
-        (useDate
-            ? (dateTime.second / 60 * 2 * pi)
-            : (elapsedTimeMs / (1000 * 60) * 2 * pi)),
-        0.8 * radius,
-        1,
-        Colors.red); // Second hand
-  }
-
-  void _drawHand(Canvas canvas, double centerX, double centerY, double radius,
-      double angle, double length, double width, Color color) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = width
-      ..strokeCap = StrokeCap.round;
-
-    final x = length * cos(angle - pi / 2);
-    final y = length * sin(angle - pi / 2);
-
-    canvas.drawLine(
-      Offset(centerX, centerY),
-      Offset(centerX + x, centerY + y),
-      paint,
-    );
+    drawHands(arms, radius, canvas, centerX, centerY, elapsedTimeMs, useDate);
   }
 
   @override
