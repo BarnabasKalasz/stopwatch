@@ -13,6 +13,8 @@ class LapList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Reverse the order of laps list to display freshest lap time at the top
+    List<int> reversedLaps = laps.reversed.toList();
     return SizedBox(
         height: 200,
         child: Column(
@@ -23,20 +25,21 @@ class LapList extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            if (laps.isEmpty)
+            if (reversedLaps.isEmpty)
               const Text('No laps recorded')
             else
               Expanded(
                 child: ListView.builder(
-                  itemCount: laps.length,
-                  reverse: true,
+                  itemCount: reversedLaps.length,
                   itemBuilder: (context, index) {
-                    final lapTime = laps[index];
+                    final lapTime = reversedLaps[index];
                     return ListTile(
-                      title: Text('Lap ${index + 1}: ${formatTime(lapTime)}'),
+                      title: Text(
+                          'Lap ${reversedLaps.length - index}: ${formatTime(lapTime)}'),
                       trailing: IconButton(
                         icon: const Icon(Icons.clear),
-                        onPressed: () => onClear(index),
+                        onPressed: () =>
+                            onClear(reversedLaps.length - index - 1),
                       ),
                     );
                   },
