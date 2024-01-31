@@ -13,33 +13,57 @@ class LapList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Reverse the order of laps list to display freshest lap time at the top
+    final theme = Theme.of(context);
+
+    /// Reverse the order of laps list to display freshest lap time at the top
     List<int> reversedLaps = laps.reversed.toList();
     return SizedBox(
-        height: 200,
+        height: 240,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Lap Times:',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            Row(
+              children: [
+                Text(
+                  'Lap Times:',
+                  style: TextStyle(
+                    color: theme.colorScheme.onBackground,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 8),
             if (reversedLaps.isEmpty)
               const Text('No laps recorded')
             else
-              Expanded(
+              SizedBox(
+                height: 210,
                 child: ListView.builder(
                   itemCount: reversedLaps.length,
                   itemBuilder: (context, index) {
                     final lapTime = reversedLaps[index];
-                    return ListTile(
-                      title: Text(
-                          'Lap ${reversedLaps.length - index}: ${formatTime(lapTime)}'),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () =>
-                            onClear(reversedLaps.length - index - 1),
+                    return Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: theme.colorScheme.surface,
+                            width: 2.0,
+                          ),
+                        ),
+                      ),
+                      child: ListTile(
+                        title: Text(
+                            'Lap ${reversedLaps.length - index}: ${formatTime(lapTime)}',
+                            style: TextStyle(color: theme.colorScheme.primary)),
+                        trailing: IconButton(
+                          icon: Icon(
+                            Icons.clear,
+                            color: theme.colorScheme.secondary,
+                          ),
+                          onPressed: () =>
+                              onClear(reversedLaps.length - index - 1),
+                        ),
                       ),
                     );
                   },
