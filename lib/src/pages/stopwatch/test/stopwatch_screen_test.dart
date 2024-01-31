@@ -4,7 +4,7 @@ import 'package:test_sopwatch/src/pages/stopwatch/models/stopwatch_model.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/screens/stopwatch_screen.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/services/stopwatch_service.dart';
 
-/// Eaiser to mock this way than to import a whole mock package like nockito
+/// More straight forward to mock this way rather than to import a whole mock package like nockito
 class TestStopwatchService implements StopwatchService {
   // ignore: prefer_final_fields
   late StopwatchModel _stopwatchModel;
@@ -25,24 +25,29 @@ class TestStopwatchService implements StopwatchService {
   @override
   void start() {
     _stopwatchModel.isRunning = true;
+    _stopwatchisRunningNotifier.value = true;
+    _stopwatchTimeNotifier.value = 123456;
   }
 
   @override
   void stop() {
     _stopwatchModel.isRunning = false;
+    _stopwatchisRunningNotifier.value = false;
   }
 
   @override
   void reset() {
     _stopwatchModel.milliseconds = 0;
     _stopwatchModel.isRunning = false;
+    _stopwatchisRunningNotifier.value = false;
+    _stopwatchTimeNotifier.value = 0;
   }
 
   @override
   void lap() {
     _stopwatchModel.laps = [];
   }
- 
+
   @override
   void clearLap(int lapIndex) {
     _stopwatchModel.laps = [];
@@ -57,7 +62,6 @@ class TestStopwatchService implements StopwatchService {
   @override
   ValueNotifier<bool> get stopwatchisRunningNotifier =>
       _stopwatchisRunningNotifier;
-      
 }
 
 void main() {
@@ -78,6 +82,7 @@ void main() {
       expect(find.byKey(const Key('start-stop-button')), findsOneWidget);
       expect(find.byKey(const Key('reset-button')), findsOneWidget);
       expect(find.byKey(const Key('lap-button')), findsOneWidget);
+      expect(find.byKey(const Key('elapsed-time-display')), findsOneWidget);
     });
 
     testWidgets('Test Start/Stop Button Functionality',
@@ -102,10 +107,17 @@ void main() {
       await tester.pumpWidget(MaterialApp(
           home: StopwatchPage(stopwatchService: testStopwatchService)));
 
+      await tester.tap(find.byKey(const Key('start-stop-button')));
+      await tester.pump();
+
+      await tester.tap(find.byKey(const Key('start-stop-button')));
+      await tester.pump();
+      expect(find.text('0:02:03:045'), findsOneWidget);
+
       await tester.tap(find.byKey(const Key('reset-button')));
       await tester.pump();
 
-      expect(find.text('00:00:000'), findsOneWidget);
+      expect(find.text('0:00:00:000'), findsOneWidget);
     });
   });
 }
