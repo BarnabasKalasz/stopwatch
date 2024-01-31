@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/components/analog_clock_widget/analog_clock_widget.dart';
 
-import 'package:test_sopwatch/src/pages/stopwatch/components/lap_builder/lap_builder.dart';
+import 'package:test_sopwatch/src/pages/stopwatch/components/lap_list_builder/lap_list_builder.dart';
+import 'package:test_sopwatch/src/pages/stopwatch/components/stopwatch_swipable_display_widget/stopwatch_swipable_display.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/models/stopwatch_model.dart';
 import 'package:test_sopwatch/src/pages/stopwatch/services/stopwatch_service.dart';
 import 'package:test_sopwatch/src/common/utils/value_listenable_builder_3.dart';
@@ -51,12 +52,34 @@ class _StopwatchPageState extends State<StopwatchPage> {
                   clockRange: 12,
                   displayNth: 6,
                 ), */
-                Text(
+                /* Text(
                   formatTime(milliseconds),
                   style: const TextStyle(
                       fontSize: 24, fontWeight: FontWeight.bold),
                   key: const Key("elapsed-time-display"),
-                ),
+                ), */
+                SwipeableStopwatchDisplay(
+                    milliseconds: milliseconds,
+                    children: [
+                      AnalogClock(
+                        elapsedTimeMs: milliseconds,
+                        size: 100,
+                        clockRange: 12,
+                        displayNth: 3,
+                      ),
+                      Text(
+                        formatTime(milliseconds),
+                        style: const TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                        key: const Key("elapsed-time-display"),
+                      ),
+                      AnalogClock(
+                        elapsedTimeMs: milliseconds,
+                        size: 100,
+                        clockRange: 60,
+                        displayNth: 5,
+                      ),
+                    ]),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

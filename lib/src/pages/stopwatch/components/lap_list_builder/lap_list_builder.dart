@@ -14,7 +14,7 @@ class LapList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: 200,
+        height: 150,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
